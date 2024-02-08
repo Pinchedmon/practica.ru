@@ -1,6 +1,7 @@
 import ThemeChanger from "@/lib/ThemeChanger"
 import Button from "@/lib/Button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
     return (
@@ -11,22 +12,27 @@ export default function Home() {
                     Практика.ру
                 </Button>
                 <div className={"flex gap-[20px]"}>
-                    <Button>
+                    <Button className={"!h-[54px]"}>
                         <ThemeChanger/>
                     </Button>
-                    <Button className={"text-[22px] gap-[10px]"}>
-                        Войти
-                        <span className={"text-accentViolet"}>
-                            <Image src={"/login.svg"} alt={""} width={17} height={17}/>
+                    <Link href={"/auth"}>
+                        <Button className={"text-[22px] gap-[10px]"}>
+                            Войти
+                            <span className={"text-accentViolet"}>
+                        <Image src={"/login.svg"} alt={""} width={17} height={17}/>
                         </span>
-                    </Button>
+                        </Button>
+                    </Link>
                 </div>
             </header>
-            <section className={"flex gap-[77px] max-w-[1100px] px-[30px] items-center mt-[100px] max-[1000px]:flex-col mb-[88px]"}>
+            <section
+                className={"flex gap-[77px] max-w-[1100px] px-[30px] items-center mt-[100px] max-[1000px]:flex-col mb-[88px]"}>
                 <p className={"font-light text-[28px]  max-[600px]:text-[20px]  max-[400px]:text-[16px]"}>
-                    <span className={"text-accentViolet"}>{`Практика.ру`}</span> – это место, где вы сможете найти задания, соответствующие вашим интересам и
+                    <span className={"text-accentViolet"}>{`Практика.ру`}</span> – это место, где вы сможете
+                    найти задания, соответствующие вашим интересам и
                     направлению обучения. Независимо от того, посвящена ли ваша специализация программированию,
-                    маркетингу, инженерии или любой другой области, у нас вы найдете полезные и актуальные задачи,
+                    маркетингу, инженерии или любой другой области, у нас вы найдете полезные и актуальные
+                    задачи,
                     которые помогут вам почувствовать себя профессионалом уже сейчас.
                 </p>
                 <Button className={"!bg-accentViolet font-bold text-nowrap !text-white"}>
@@ -35,7 +41,7 @@ export default function Home() {
             </section>
 
             <div className={"overflow-hidden mb-[100px] p-[30px]"}>
-                <Image src={"/people.png"} alt={"people"} width={1380} height={289} />
+                <Image src={"/people.png"} alt={"people"} width={1380} height={289}/>
             </div>
         </main>
     );
