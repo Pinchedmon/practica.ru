@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes } from 'react'
 import Image from 'next/image'
 interface svgProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     width: number;
-    className: string
+    className?: string
     height: number;
     fill: string;
 }

@@ -4,7 +4,6 @@ import { useTheme } from 'next-themes'
 import { memo, useEffect, useState } from 'react';
 
 import SunIcon from './components/SunIcon';
-import clsx from 'clsx';
 import MoonIcon from './components/MoonIcon';
 
 export enum ButtonTheme {
@@ -31,8 +30,8 @@ const ThemeChanger = (props: ButtonProps) => {
   const {
     buttonTheme = ButtonTheme.OUTLINE,
     size = IconSize.L,
-    whiteColor = '#B5B5B5',
-    darkColor = '#B5B5B5',
+    whiteColor = '#ffffff',
+    darkColor = '#000000',
 
 
   } = props;
@@ -47,9 +46,9 @@ const ThemeChanger = (props: ButtonProps) => {
   return (
     <>
       {theme !== 'light' ?
-        <SunIcon onClick={() => setTheme('light')} className={clsx([buttonTheme])} width={size} height={size} fill={darkColor} />
+        <SunIcon onClick={() => setTheme('light')} className={"dark:invert"} width={size} height={size} fill={whiteColor} />
         :
-        <MoonIcon onClick={() => setTheme('dark')} className={clsx([buttonTheme])} width={size} height={size} fill={whiteColor} />
+        <MoonIcon onClick={() => setTheme('dark')} className={"dark:invert"}  width={size} height={size} fill={darkColor} />
       }
     </ >
   )
