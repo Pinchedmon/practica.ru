@@ -1,5 +1,10 @@
+'use client'
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { DataTable } from "@/lib/DataTable/DataTable"
 import { ColumnDef } from "@tanstack/react-table"
+import { MoreHorizontal } from "lucide-react";
+
 
 type Student = {
     id: string | number;
@@ -40,9 +45,32 @@ const columns: ColumnDef<Student>[] = [
         header: "Специальность",
         accessorKey: "Spec",
     },
+    {
+        id: "actions",
+        cell: ({ row }) => {
+            const order = row.original
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Действия</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Удалить</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )
+        },
+    },
 ];
-async function getData(): Promise<Student[]> {
-    return [
+
+
+export default function StudentsPage() {
+    const data = [
         {
             id: '1',
             FIO: 'Фамилия Имя Отчество',
@@ -54,10 +82,6 @@ async function getData(): Promise<Student[]> {
             Spec: 'Информационная безопасност',
         },
     ]
-}
-
-export default async function StudentsPage() {
-    const data = await getData();
     return (
         <div>
             <p className="font-mono text-xl mb-4">

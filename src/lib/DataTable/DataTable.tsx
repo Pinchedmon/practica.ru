@@ -15,9 +15,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-
-import { ActionButton } from "./ActionButton"
-
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
@@ -63,9 +60,6 @@ export function DataTable<TData, TValue>({
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                                 ))}
-                                <TableCell>
-                                    <ActionButton onClick={() => handleAction(row)} />
-                                </TableCell>
                             </TableRow>
                         ))
                     ) : (

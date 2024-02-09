@@ -1,9 +1,19 @@
+'use client'
 import { DataTable } from "@/lib/DataTable/DataTable"
 import { ColumnDef } from "@tanstack/react-table"
-
+import { Button } from "@/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { MoreHorizontal } from "lucide-react";
 
 type Order = {
-    id: string | number;
+    id: string;
     FIO: string;
     Phone: number;
     Begin: string;
@@ -42,9 +52,30 @@ const columns: ColumnDef<Order>[] = [
         header: "Специальность",
         accessorKey: "Spec",
     },
+    {
+        id: "actions",
+        cell: ({ row }) => {
+            const order = row.original
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Действия</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Добавить</DropdownMenuItem>
+                        <DropdownMenuItem>Удалить</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )
+        },
+    },
 ];
 async function getData(): Promise<Order[]> {
-    // Fetch data from your API here.
     return [
         {
             id: '1',
@@ -56,7 +87,6 @@ async function getData(): Promise<Order[]> {
             Univ: 'Политех',
             Spec: 'Информационная безопасност',
         },
-        // ...
     ]
 }
 
