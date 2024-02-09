@@ -1,3 +1,6 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { DataTable } from "@/lib/DataTable/DataTable"
 import { ColumnDef } from "@tanstack/react-table"
 
@@ -31,6 +34,17 @@ export default async function UnivsPage() {
             <p className="font-mono text-xl mb-4">
                 ВУЗЫ
             </p>
+            <div className="mb-4">
+                <div className="w-full md:w-1/2">
+                    <div className="w-full flex gap-2 items-end mb-2" >
+                        <div className="grid w-full items-center gap-1.5">
+                            <Label htmlFor="univ" className="mb-1">Название        </Label>
+                            <Input id="univ" placeholder="Добавить вуз" type="text" />
+                        </div>
+                        <Button>Добавить</Button>
+                    </div>
+                </div>
+            </div>
             <DataTable columns={columns} data={data} />
         </div>
     )

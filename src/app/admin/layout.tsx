@@ -16,10 +16,10 @@ const AdminLayout = ({
             >
                 {isSidebarOpen ? 'Закрыть меню' : 'Отправить меню'}
             </button>
-            <div className={` ${!isSidebarOpen && "hidden md:block"}`}>
+            <div className={` top-[15px] ${!isSidebarOpen && "hidden md:block"}`}>
                 <Sidebar setSidebarFalse={() => setIsSidebarOpen(false)} />
             </div>
-            <main className={`${isSidebarOpen && 'hidden'} w-full p-2 md:p-16`}>
+            <main className={`md:ml-[250px] ${isSidebarOpen && 'hidden'} w-full p-2 md:p-16`}>
                 {children}
             </main>
         </div>

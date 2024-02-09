@@ -4,7 +4,7 @@ import Link from "next/link"
 const Sidebar = (props: { setSidebarFalse: () => void }) => {
     const { setSidebarFalse } = props
     return (
-        <section className="w-full align-center items-center bg-accentViolet h-full md:flex flex-col text-white p-6 ">
+        <section className="static w-full md:w-[250px] md:fixed  align-center items-center bg-accentViolet h-full md:flex flex-col text-white p-6 ">
             <h1 className="text-2xl font-bold mb-4">  Практика.ру</h1>
             <hr className="mb-4" />
             <nav className="flex flex-col">
