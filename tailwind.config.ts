@@ -24,6 +24,7 @@ const config = {
         bgButton: "#ffffff",
         bgButtonDark: "#2C2C2C",
         accentViolet: "#9381FF",
+        placeholderGray: "#808080",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
