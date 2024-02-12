@@ -15,6 +15,7 @@ declare module "next-auth" {
 	}
 }
 const authOptions: NextAuthOptions = {
+    secret: process.env.NEXTAUTH_SECRET,
 	providers: [
 		CredentialsProvider({
 			id: "telegram-login",
