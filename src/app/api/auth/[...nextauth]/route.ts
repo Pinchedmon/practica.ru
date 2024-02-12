@@ -22,9 +22,9 @@ const authOptions: NextAuthOptions = {
 			credentials: {},
 			async authorize(credentials, req) {
 				const validator = new AuthDataValidator({
-					botToken: `${process.env.BOT_TOKEN}`,
+					botToken: `6720322535:AAGlaAhZ4r4LbellSslyC7mZMUVKUN_h9GE`,
 				});
-                
+
 				const data = objectToAuthDataMap(req.query || {});
 				const user = await validator.validate(data);
                 console.log(user)
