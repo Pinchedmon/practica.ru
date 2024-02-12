@@ -29,9 +29,9 @@ export function DataTable<TData, TValue>({
         columns,
         getCoreRowModel: getCoreRowModel(),
     })
-    const handleAction = (row: any) => {
-        const id = console.log(row);
-    };
+    // const handleAction = (row: any) => {
+    //     const id = console.log(row);
+    // };
     return (
         <div className="rounded-md border">
             <Table>
@@ -65,7 +65,7 @@ export function DataTable<TData, TValue>({
                     ) : (
                         <TableRow>
                             <TableCell colSpan={columns.length} className="h-24 text-center">
-                                No results.
+                                Нет результатов
                             </TableCell>
                         </TableRow>
                     )}
