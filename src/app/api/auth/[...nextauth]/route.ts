@@ -1,8 +1,9 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, update } from "firebase/database";
 import { objectToAuthDataMap, AuthDataValidator } from "@telegram-auth/server";
-
+import { v4 as uuid } from 'uuid';
+import { rtdb } from "../../../../../firebase";
 declare module "next-auth" {
 	interface Session {
 		user: {
@@ -26,7 +27,7 @@ const authOptions: NextAuthOptions = {
                 
 				const data = objectToAuthDataMap(req.query || {});
 				const user = await validator.validate(data);
-
+                console.log(user)
 				if (user.id && user.first_name) {
 					const returned = {
 						id: user.id.toString(),
@@ -36,13 +37,17 @@ const authOptions: NextAuthOptions = {
 					};
 
 					try {
-        
-                        const db = getDatabase();
-                        set(ref(db, 'users/' + returned.id), {
-                            username: returned.name,
-                            email: returned.email,
-                            profile_picture : returned.image
-                        });
+                        const newUserId = uuid();
+                        const updates = {
+                            [`users/${newUserId}`]: {
+                                id: newUserId,
+                                email: returned.email,
+                                name: returned.name,
+                                image: returned.image,
+                                isAdmin: false,
+                            },
+                        };
+                        update(ref(rtdb), updates);
 
 					} catch {
 						console.log(
@@ -70,3 +75,7 @@ const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
+
+
+
+   

@@ -17,6 +17,7 @@
     "@tanstack/react-table": "^8.11.8",
     "@telegram-auth/react": "^1.0.3",
     "@telegram-auth/server": "^1.0.3",
+    "@types/uuid": "^9.0.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",
@@ -31,7 +32,8 @@
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
     "tailwind-merge": "^2.2.1",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20",
