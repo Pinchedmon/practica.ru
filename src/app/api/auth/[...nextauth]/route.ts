@@ -1,6 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
+import { getDatabase, ref, set } from "firebase/database";
 import { objectToAuthDataMap, AuthDataValidator } from "@telegram-auth/server";
 
 declare module "next-auth" {
@@ -23,7 +23,7 @@ const authOptions: NextAuthOptions = {
 				const validator = new AuthDataValidator({
 					botToken: `${process.env.BOT_TOKEN}`,
 				});
-
+                
 				const data = objectToAuthDataMap(req.query || {});
 				const user = await validator.validate(data);
 
@@ -36,8 +36,14 @@ const authOptions: NextAuthOptions = {
 					};
 
 					try {
-                        console.log(212)
-						// await createUserOrUpdate(user); Добавление юзера в бд
+        
+                        const db = getDatabase();
+                        set(ref(db, 'users/' + returned.id), {
+                            username: returned.name,
+                            email: returned.email,
+                            profile_picture : returned.image
+                        });
+
 					} catch {
 						console.log(
 							"Something went wrong while creating the user."
