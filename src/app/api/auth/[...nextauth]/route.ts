@@ -58,10 +58,11 @@ export const authOptions: NextAuthOptions = {
 		},
 	},
 	pages: {
-		signIn: "/auth/signin",
-		error: "/auth/error",
+		signIn: "/auth",
+		error: "/auth",
 	},
 };
+export default NextAuth(authOptions);
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
