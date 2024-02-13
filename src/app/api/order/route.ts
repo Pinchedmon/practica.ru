@@ -17,7 +17,6 @@ export async function POST(req: Request, route: { params: { id: string } }) {
         const studentsRef = doc(db, "students", id);
                 const docSnap = await getDoc(studentsRef);
                 if (docSnap.exists()) {
-                  console.log("Document data:", docSnap.data());
                   return NextResponse.json({data: docSnap.data() }, { status: 200 });
                   } else {
                   await setDoc(studentsRef, {
@@ -27,7 +26,7 @@ export async function POST(req: Request, route: { params: { id: string } }) {
                     accepted: false,
                     });
                   }
-      return NextResponse.json({ data: 'created'}, { status: 200 });
+      return NextResponse.json({ data: 'false'}, { status: 200 });
     } catch (err) {
       console.error(err);
       return NextResponse.json({ message: "Something went wrong!" }, { status: 500 });
@@ -44,9 +43,11 @@ export async function POST(req: Request, route: { params: { id: string } }) {
   export async function GET(req: Request) {
     
     try {
+ 
       const { searchParams } = new URL(req.url);
       const id = searchParams.get('id');
-      const studentsRef = doc(db, "students", id as string);
+      console.log(id)
+      const studentsRef = doc(db, "orders", id as string);
 			const docSnap = await getDoc(studentsRef);
       return NextResponse.json({ data: docSnap.data()}, { status: 200 });
     } catch (err) {
