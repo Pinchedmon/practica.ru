@@ -6,25 +6,33 @@ import { Label } from '@radix-ui/react-label';
 import React, { useState } from 'react'
 import { Combobox } from './Combobox/Combobox';
 
+interface Props {
+    univs: any[];
+    specs: any[];
+    onAdd: (data: any) => void;
+}
 
-const AddTaskWindow = () => {
+
+const AddTaskWindow = ({univs, specs, onAdd}:Props) => {
     const [isAddingTask, setIsAddingTask] = useState(false);
-    const dataUniv = [
-        {
-            value: "1",
-            label: "Политех",
-        },
-        {
-            value: "2",
-            label: "Итмо",
-        },
-    ]
-    const dataSpec = [
-        {
-            value: "1",
-            label: "Программист",
-        },
-    ]
+
+    const [title, setTitle] = useState('');
+    const [text, setText] = useState('');
+    const [univId, setUnivId] = useState('');
+    const [specId, setSpecId] = useState('');
+
+    const dataUniv = univs.map(el => ({value: el.id, label: el.name}));
+    const dataSpec = specs.map(el => ({value: el.id, label: el.name}));
+
+    async function handleAddTask() {
+        if (!title || !text || !univId || !specId) {
+            alert('Заполните все поля!')
+            return
+        }
+        onAdd({univId, specId, title, text})
+        setIsAddingTask(false);
+    }
+
     return (
         <>
             <div className="mb-4">
@@ -34,11 +42,12 @@ const AddTaskWindow = () => {
                 <div className='mb-4 z-10 w-full border p-4 rounded-lg flex flex-col'>
                     <p className='text-lg font-semibold mb-2'>Добавить задание</p>
                     <div className="flex flex-col md:flex-row gap-4 mb-2">
-                        <Combobox data={dataUniv} label={'Вуз'} />
-                        <Combobox data={dataSpec} label={'Специальность'} />
+                        <Combobox data={dataUniv} label={'Вуз'} onSelect={setUnivId} />
+                        <Combobox data={dataSpec} label={'Специальность'} onSelect={setSpecId} />
                     </div>
-                    <Textarea className='mb-2' placeholder="Напишите задание" />
-                    <Button className='w-[100px]'>Отправить</Button>
+                    <Input className='mb-2' placeholder="Название задания" value={title} onChange={(e) => setTitle(e.target.value)} />
+                    <Textarea className='mb-2' placeholder="Напишите задание" value={text} onChange={(e) => setText(e.target.value)} />
+                    <Button className='w-[100px]' onClick={handleAddTask}>Отправить</Button>
                 </div>
             }
         </>

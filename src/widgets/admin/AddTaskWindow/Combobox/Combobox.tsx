@@ -17,6 +17,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import {useEffect, useState} from "react";
 
 
 
@@ -25,11 +26,27 @@ type Tdata = {
     label: string
 }
 
-export function Combobox(props: { data: Tdata[], label: string }) {
-    const { data, label } = props
-    const [open, setOpen] = React.useState(false)
-    const [value, setValue] = React.useState("")
+interface Props {
+    data: Tdata[],
+    label: string,
+    selected?: string;
+    onSelect: (value: string) => void
+}
 
+
+export function Combobox(props: Props) {
+    const { data, label, onSelect , selected} = props
+    const [open, setOpen] = useState(   false)
+    const [value, setValue] = useState(selected || "")
+
+    useEffect(() => {
+        if (value)
+        onSelect(value);
+    }, [value]);
+
+    console.log(open)
+
+    console.log(data)
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -45,10 +62,10 @@ export function Combobox(props: { data: Tdata[], label: string }) {
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className="w-[200px] p-0 !z-[1000]">
                 <Command>
                     <CommandInput placeholder={`Поиск`} />
-                    <CommandEmpty>${label} не найден.</CommandEmpty>
+                    <CommandEmpty>{label} не найден.</CommandEmpty>
                     <CommandGroup>
                         {data.map((data) => (
                             <CommandItem
@@ -56,7 +73,7 @@ export function Combobox(props: { data: Tdata[], label: string }) {
                                 value={data.value}
                                 onSelect={(currentValue) => {
                                     setValue(currentValue === value ? "" : currentValue)
-                                    setOpen(false)
+                                    // setOpen(false)
                                 }}
                             >
                                 <Check

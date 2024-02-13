@@ -14,7 +14,7 @@ const Modal = ({ isOpen, onClose, children }: Props) => {
             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 <div onClick={onClose} className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
                 <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                <div className="inline-block align-bottom  bg-bg-content dark:bg-dark-bg-content rounded-[20px] text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-[300px] ">
+                <div className="inline-block align-bottom  bg-bg-content dark:bg-dark-bg-content rounded-[20px] text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle min-w-[300px] ">
                     <div className="p-6 pb-4">
                         {children}
                     </div>

@@ -17,7 +17,7 @@ export async function GET(req: Request, route: { params: { id: string } }) {
              );
         }
     });
-    return NextResponse.json({ univs: res}, { status: 200 });
+    return NextResponse.json({ data: res}, { status: 200 });
 
   } catch (err) {
     console.error(err);
