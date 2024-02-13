@@ -60,7 +60,6 @@ export default function SignInButton({ botUsername }: { botUsername: string }) {
                 botUsername={'Practica_ru_bot'}
                 onAuthCallback={(data: any) => {
                     signIn("telegram-login", { callbackUrl: "/" }, data as any);
-                    console.log(data)
                 }}
             />
         </>

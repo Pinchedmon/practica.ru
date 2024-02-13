@@ -13,13 +13,14 @@ import useModal from "@/lib/useModal";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import useSWR, { useSWRConfig } from 'swr'
 import { fetcher } from "@/lib/fetcher";
+import WithAuth from "@/lib/RequireAuth";
 
 type Univ = {
     id: string;
     name: string;
 };
 
-export default function UnivsPage() {
+function UnivsPage() {
     //TODO: refactor code, ибо выглядит ну не оч всё, много useState, всё в одной компоненте. Карточку с изменением думаю, лучше будет перенести в отдельнуую папку.
 
     // mutate - для того чтобы сделать refresh в получении data по запросу
@@ -157,3 +158,5 @@ export default function UnivsPage() {
     )
 }
 
+
+export default UnivsPage;

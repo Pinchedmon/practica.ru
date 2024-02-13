@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal } from "lucide-react";
 
+
 type Order = {
     id: string;
     FIO: string;
@@ -75,8 +76,9 @@ const columns: ColumnDef<Order>[] = [
         },
     },
 ];
-async function getData(): Promise<Order[]> {
-    return [
+
+function OrdersPage() {
+    const data = [
         {
             id: '1',
             FIO: 'Фамилия Имя Отчество',
@@ -88,10 +90,6 @@ async function getData(): Promise<Order[]> {
             Spec: 'Информационная безопасност',
         },
     ]
-}
-
-export default async function OrdersPage() {
-    const data = await getData();
     return (
         <div>
             <p className="font-mono text-xl mb-4">
@@ -102,3 +100,5 @@ export default async function OrdersPage() {
         </div>
     )
 }
+
+export default OrdersPage;

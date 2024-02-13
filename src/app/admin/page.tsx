@@ -1,6 +1,9 @@
 'use client'
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 interface IFormInput {
@@ -9,8 +12,16 @@ interface IFormInput {
 }
 
 export default function AdminPage() {
+    const session = useSession();
+    const router = useRouter();
+    useEffect(() => {
+        if (session.status === 'authenticated') {
+            router.push('/admin/orders')
+        }
+    }, [session.status])
     const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>();
-    const onSubmit = () => {
+    const onSubmit = async (data: IFormInput) => {
+        await signIn('credentials', { redirect: false, name: data.login, password: data.password }).then(res => console.log(res))
 
     }
     return (

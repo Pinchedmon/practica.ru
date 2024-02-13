@@ -4,6 +4,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DataTable } from "@/lib/DataTable/DataTable"
+import WithAuth from "@/lib/RequireAuth";
 import AddTaskWindow from "@/widgets/admin/AddTaskWindow";
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react";
@@ -52,8 +53,11 @@ const columns: ColumnDef<Task>[] = [
     },
 
 ];
-async function getData(): Promise<Task[]> {
-    return [
+
+
+function TasksPage() {
+
+    const data = [
         {
             id: '1',
             Name: 'Задание 1',
@@ -61,11 +65,6 @@ async function getData(): Promise<Task[]> {
             Spec: 'Программист',
         },
     ]
-}
-
-export default async function TasksPage() {
-
-    const data = await getData();
     return (
         <div>
             <p className="font-mono text-xl mb-4">
@@ -95,4 +94,4 @@ export default async function TasksPage() {
         </div>
     )
 }
-
+export default TasksPage

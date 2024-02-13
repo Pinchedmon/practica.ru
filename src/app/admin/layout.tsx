@@ -1,6 +1,7 @@
 'use client'
 import { useState } from "react";
 import Sidebar from "../../widgets/Sidebar"
+import RequireAuth from "@/lib/RequireAuth";
 
 const AdminLayout = ({
     children,
@@ -20,7 +21,10 @@ const AdminLayout = ({
                 <Sidebar setSidebarFalse={() => setIsSidebarOpen(false)} />
             </div>
             <main className={`md:ml-[250px] ${isSidebarOpen && 'hidden'} w-full p-2 md:p-16`}>
-                {children}
+                <RequireAuth>
+                    {children}
+                </RequireAuth>
+
             </main>
         </div>
     )
