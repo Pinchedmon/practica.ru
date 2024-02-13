@@ -42,7 +42,7 @@ const authOptions: NextAuthOptions = {
 
 				const data = objectToAuthDataMap(req.query || {});
 				const user = await validator.validate(data);
-
+				
 				if (user.id && user.first_name) {
 					const returned = {
 						id: user.id.toString(),
@@ -53,11 +53,6 @@ const authOptions: NextAuthOptions = {
 					try {
 						const studentsRef = doc(db, "students", returned.id);
 						const docSnap = await getDoc(studentsRef);
-
-						if (docSnap.exists()) {
-							console.log("Document data:", docSnap.data());
-						  } else {
-							// docSnap.data() will be undefined in this case
 							await setDoc(studentsRef, {
 								id: returned.id,
 								name: returned.name,
@@ -65,7 +60,7 @@ const authOptions: NextAuthOptions = {
 								image: returned.image,
 								accepted: false,
 							  });
-						  }
+						  
 
 					} catch {
 						console.log(
