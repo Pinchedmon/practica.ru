@@ -20,7 +20,7 @@ export default function AuthPage() {
                         <p className={"text-white text-[48px] font-semibold max-[1000px]:text-[24px] "}>Задания здесь!</p>
                     </div>
                     <div>
-                        {data.data && JSON.stringify(data)}
+                        {!isLoading && JSON.stringify(data)}
                     </div>
                     {/* {session.} */}
                     {/* <AuthForm /> */}
