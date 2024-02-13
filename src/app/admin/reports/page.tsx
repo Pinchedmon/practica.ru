@@ -4,6 +4,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DataTable } from "@/lib/DataTable/DataTable"
+import WithAuth from "@/lib/RequireAuth";
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react";
 
@@ -60,8 +61,10 @@ const columns: ColumnDef<Report>[] = [
     },
 
 ];
-async function getData(): Promise<Report[]> {
-    return [
+
+
+function ReportsPage() {
+    const data = [
         {
             id: '1',
             Student: 'Фамилия Имя Отчество',
@@ -70,10 +73,6 @@ async function getData(): Promise<Report[]> {
             Order: 'ya.ru'
         },
     ]
-}
-
-export default async function ReportsPage() {
-    const data = await getData();
     return (
         <div>
             <p className="font-mono text-xl mb-4">
@@ -111,3 +110,5 @@ export default async function ReportsPage() {
     )
 }
 
+
+export default ReportsPage

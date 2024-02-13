@@ -1,9 +1,8 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getDatabase, ref, set, update } from "firebase/database";
 import { objectToAuthDataMap, AuthDataValidator } from "@telegram-auth/server";
-import { v4 as uuid } from 'uuid';
-import { rtdb } from "../../../../../firebase";
+import { db } from "../../../../../firebase";
+import { doc, setDoc, collection, getDoc} from "firebase/firestore";
 declare module "next-auth" {
 	interface Session {
 		user: {
@@ -14,6 +13,21 @@ declare module "next-auth" {
 		};
 	}
 }
+interface User {
+	id: string;
+	name: string;
+	password: string;
+	
+  }
+  const users: Record<string, User> = {
+	admin: {
+	  id: "1",
+	  name: "admin",
+	  password: "admin",
+
+	},
+  };
+
 const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
 	providers: [
@@ -36,19 +50,24 @@ const authOptions: NextAuthOptions = {
 						name: [user.first_name, user.last_name || ""].join(" "),
 						image: user.photo_url,
 					};
-
 					try {
-                        const newUserId = uuid();
-                        const updates = {
-                            [`users/${newUserId}`]: {
-                                id: newUserId,
-                                email: returned.email,
-                                name: returned.name,
-                                image: returned.image,
-                                isAdmin: false,
-                            },
-                        };
-                        update(ref(rtdb), updates);
+						const univRef = doc(db, "univs", returned.id);
+						const docSnapshot = await getDoc(univRef);
+					
+						if (!docSnapshot.exists()) {
+							// Document does not exist, create a new one
+							await setDoc(univRef, {
+							  id: returned.id,
+							  name: returned.name,
+							  email: returned.email,
+							  image: returned.image,
+							  accepted: false,
+							});
+							console.log("Document created successfully!");
+						  } else {
+							// Document already exists, do something else
+							console.log("Document already exists!");
+						  }
 
 					} catch {
 						console.log(
@@ -61,15 +80,53 @@ const authOptions: NextAuthOptions = {
 				return null;
 			},
 		}),
+		CredentialsProvider({
+			name: "Credentials",
+			credentials: {
+				name: { label: "login", type: "text", placeholder: "jsmith" },
+				password: { label: "Password", type: "password" }
+			},
+			async authorize(credentials) {
+                if (!credentials?.name || !credentials?.password){
+                    return null;
+                }
+			const user = users[credentials.name];
+			if (!user || user.password !== credentials.password) {
+			return null;
+			}
+			return new Promise((resolve) => resolve(user));
+      },
+		}),
 	],
+	session: {
+		strategy: "jwt",
+	  },
 	callbacks: {
-		async session({ session, user, token }) {
-			session.user.id = session.user.email;
-			return session;
-		},
+		async jwt({ token, user }) {
+            if (user){
+                return {
+                    ...token,
+                    id: user.id,
+                    name: user.name,
+                    email: user.email
+                }
+            }
+            return token
+          },
+        async session({ session, user, token }) {
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    id: token.id,
+                    name: token.name,
+                    email: token.email
+                }
+            }
+          },
 	},
 	pages: {
-		signIn: "/auth",
+		signIn: "/auth" && "/admin",
 		error: "/auth",
 	},
 };

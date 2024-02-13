@@ -35,7 +35,7 @@ export type TaskFormatted = {
 
 
 
-export default function TasksPage() {
+function TasksPage() {
 
     const { mutate } = useSWRConfig();
 
@@ -181,4 +181,4 @@ export default function TasksPage() {
         </div>
     )
 }
-
+export default TasksPage

@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { DataTable } from "@/lib/DataTable/DataTable"
+import WithAuth from "@/lib/RequireAuth";
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react";
 
@@ -69,7 +70,7 @@ const columns: ColumnDef<Student>[] = [
 ];
 
 
-export default function StudentsPage() {
+function StudentsPage() {
     const data = [
         {
             id: '1',
@@ -92,3 +93,7 @@ export default function StudentsPage() {
         </div>
     )
 }
+
+
+
+export default StudentsPage;

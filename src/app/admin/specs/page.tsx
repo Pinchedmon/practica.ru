@@ -6,13 +6,14 @@ import { Label } from "@/components/ui/label";
 import { DataTable } from "@/lib/DataTable/DataTable"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react";
-import useSWR, {useSWRConfig} from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import useModal from "@/lib/useModal";
-import {useState} from "react";
-import {fetcher} from "@/lib/fetcher";
+import { useState } from "react";
+import { fetcher } from "@/lib/fetcher";
 import axios from "axios";
-import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Modal from "@/components/ui/modal";
+import WithAuth from "@/lib/RequireAuth";
 
 type Spec = {
     id: string;
@@ -20,7 +21,7 @@ type Spec = {
 };
 
 
-export default function SpecsPage() {
+function SpecsPage() {
 
     // mutate - для того чтобы сделать refresh в получении data по запросу
     const { mutate } = useSWRConfig();
@@ -149,3 +150,4 @@ export default function SpecsPage() {
     )
 }
 
+export default SpecsPage
