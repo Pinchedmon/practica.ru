@@ -1,13 +1,14 @@
 "use client"
-import {useForm} from "react-hook-form";
-import {CalendarIcon} from "lucide-react";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {cn} from "@/lib/utils";
-import {addDays, format} from "date-fns";
-import {Calendar} from "@/components/ui/calendar";
-import {DateRange} from "react-day-picker";
-import {useState} from "react";
-import {Button} from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { CalendarIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { addDays, format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import { DateRange } from "react-day-picker";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
 
 
 interface IFormInput {
@@ -23,8 +24,8 @@ interface IFormInput {
 
 
 export function DatePickerWithRange({
-                                        className,
-                                    }: React.HTMLAttributes<HTMLDivElement>) {
+    className,
+}: React.HTMLAttributes<HTMLDivElement>) {
     const [date, setDate] = useState<DateRange | undefined>({
         from: new Date(),
         to: addDays(new Date(), 30),
@@ -84,11 +85,20 @@ export function DatePickerWithRange({
 }
 
 
-const AuthForm = () => {
+const AuthForm = (props: { onCreate: () => void }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>();
 
-    const onSubmit = (data: IFormInput) => {
+    const onSubmit = async (data: IFormInput) => {
+        await axios.post('/api/order', {
+            fio: data.fio,
+            phone: data.phone,
+            endDate: data.endDate,
+            startDate: data.startDate,
+            file: data.file,
+            university: data.university,
+            spec: data.spec,
 
+        }).then(res => res.status === 200 && props.onCreate())
     }
 
     return (
@@ -104,8 +114,8 @@ const AuthForm = () => {
                         className={"bg-white text-black border-0 rounded-[15px] px-[15px] py-[7px] placeholder:text-placeholderGray text-[16px]"}
                         {...register('fio', {
                             required: 'Не заполнено',
-                            minLength: {value: 6, message: 'Минимальная длина 6 символов'},
-                            maxLength: {value: 40, message: 'Максимальная длина 40 символов'},
+                            minLength: { value: 6, message: 'Минимальная длина 6 символов' },
+                            maxLength: { value: 40, message: 'Максимальная длина 40 символов' },
                         })}
                     />
                     {errors.fio && <p className='my-1 text-red-800 text-sm'>{errors.fio.message}</p>}
@@ -119,15 +129,15 @@ const AuthForm = () => {
                         className={"bg-white text-black border-0 rounded-[15px] px-[15px] py-[7px] placeholder:text-placeholderGray text-[16px]"}
                         {...register('phone', {
                             required: 'Не заполнено',
-                            minLength: {value: 6, message: 'Минимальная длина 6 символов'},
-                            maxLength: {value: 15, message: 'Максимальная длина 15 символов'},
+                            minLength: { value: 6, message: 'Минимальная длина 6 символов' },
+                            maxLength: { value: 15, message: 'Максимальная длина 15 символов' },
                         })}
                     />
                     {errors.phone && <p className='my-1 text-red-800 text-sm'>{errors.phone.message}</p>}
                 </div>
                 <div className={"flex flex-col gap-[5px]"}>
                     <label htmlFor={"fio"} className={"pl-[20px] text-[16px]"}> Даты практики</label>
-                    <DatePickerWithRange/>
+                    <DatePickerWithRange />
                 </div>
                 <div className={"flex justify-between items-center"}>
                     <label htmlFor="file" className={"pl-[20px]  text-[16px]"}>
@@ -154,8 +164,8 @@ const AuthForm = () => {
                         className={"bg-white text-black border-0 rounded-[15px] px-[15px] py-[7px] placeholder:text-placeholderGray text-[16px]"}
                         {...register('university', {
                             required: 'Не заполнено',
-                            minLength: {value: 6, message: 'Минимальная длина 6 символов'},
-                            maxLength: {value: 40, message: 'Максимальная длина 40 символов'},
+                            minLength: { value: 6, message: 'Минимальная длина 6 символов' },
+                            maxLength: { value: 40, message: 'Максимальная длина 40 символов' },
                         })}
                     />
                     {errors.university && <p className='my-1 text-red-800 text-sm'>{errors.university.message}</p>}
@@ -169,8 +179,8 @@ const AuthForm = () => {
                         className={"bg-white text-black border-0 rounded-[15px] px-[15px] py-[7px] placeholder:text-placeholderGray text-[16px]"}
                         {...register('spec', {
                             required: 'Не заполнено',
-                            minLength: {value: 6, message: 'Минимальная длина 6 символов'},
-                            maxLength: {value: 40, message: 'Максимальная длина 40 символов'},
+                            minLength: { value: 6, message: 'Минимальная длина 6 символов' },
+                            maxLength: { value: 40, message: 'Максимальная длина 40 символов' },
                         })}
                     />
                     {errors.spec && <p className='my-1 text-red-800 text-sm'>{errors.spec.message}</p>}

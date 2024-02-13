@@ -13,7 +13,7 @@ export default function AuthPage() {
 
     const [order, setOrder] = useState<boolean>(false)
     const sendOrCheckUser = async () => {
-        await axios.post('/api/order', {
+        await axios.post('/api/student', {
             id: session.data?.user.id,
             name: session.data?.user.name,
             email: session.data?.user.email
@@ -40,15 +40,11 @@ export default function AuthPage() {
                         Практика.ру
                     </div>
                     <p className={"text-white text-[48px] font-semibold max-[1000px]:text-[24px] "}>Задания здесь!</p>
-                </div>
-                <div>
-                    {JSON.stringify(order)}
-                </div>
-                {/* {session.} */}
+                </div>x
                 {session.status !== 'authenticated' && <SignInButton botUsername={`${process.env.BOT_USERNAME}`} />}
                 {
                     (session.status == 'authenticated' && !order) ?
-                        <AuthForm /> : 'Вы отправили заявку, подождите пока её обработают'
+                        <AuthForm onCreate={() => setOrder(true)} /> : 'Вы отправили заявку, подождите пока её обработают'
                 }
             </div>
         </main>

@@ -13,20 +13,27 @@ export async function DELETE(req: Request, route: { params: { id: string } }) {
 export async function POST(req: Request, route: { params: { id: string } }) {
     try {
       const body = await req.json();
-      const { email, id, name}  = body;
-        const studentsRef = doc(db, "students", id);
-                const docSnap = await getDoc(studentsRef);
-                if (docSnap.exists()) {
-                  return NextResponse.json({data: docSnap.data() }, { status: 200 });
-                  } else {
-                  await setDoc(studentsRef, {
-                    id: id,
-                    name: name,
-                    email: email,
-                    accepted: false,
+      const {
+        fio,
+        phone,
+        startDate,
+        endDate,
+        file,
+        university,
+        spec,
+      }  = body;
+        const orderRef = doc(db, "order", fio);
+                  await setDoc(orderRef, {
+                    fio,
+                    phone,
+                    startDate,
+                    endDate,
+                    file,
+                    university,
+                    spec,
                     });
-                  }
-      return NextResponse.json({ data: 'false'}, { status: 200 });
+                  
+      return NextResponse.json({ data:'created'}, { status: 200 });
     } catch (err) {
       console.error(err);
       return NextResponse.json({ message: "Something went wrong!" }, { status: 500 });
