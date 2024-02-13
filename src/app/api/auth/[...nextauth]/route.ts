@@ -42,7 +42,7 @@ const authOptions: NextAuthOptions = {
 
 				const data = objectToAuthDataMap(req.query || {});
 				const user = await validator.validate(data);
-                console.log(user)
+
 				if (user.id && user.first_name) {
 					const returned = {
 						id: user.id.toString(),
@@ -51,22 +51,20 @@ const authOptions: NextAuthOptions = {
 						image: user.photo_url,
 					};
 					try {
-						const univRef = doc(db, "univs", returned.id);
-						const docSnapshot = await getDoc(univRef);
-					
-						if (!docSnapshot.exists()) {
-							// Document does not exist, create a new one
-							await setDoc(univRef, {
-							  id: returned.id,
-							  name: returned.name,
-							  email: returned.email,
-							  image: returned.image,
-							  accepted: false,
-							});
-							console.log("Document created successfully!");
+						const studentsRef = doc(db, "students", returned.id);
+						const docSnap = await getDoc(studentsRef);
+
+						if (docSnap.exists()) {
+							console.log("Document data:", docSnap.data());
 						  } else {
-							// Document already exists, do something else
-							console.log("Document already exists!");
+							// docSnap.data() will be undefined in this case
+							await setDoc(studentsRef, {
+								id: returned.id,
+								name: returned.name,
+								email: returned.email,
+								image: returned.image,
+								accepted: false,
+							  });
 						  }
 
 					} catch {
