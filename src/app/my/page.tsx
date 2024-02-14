@@ -1,8 +1,15 @@
+'use client'
 import Button from "@/lib/Button";
 import ThemeChanger from "@/lib/ThemeChanger";
 import Link from "next/link";
 import Image from "next/image";
 import TasksList from "@/app/my/TasksList/TasksList";
+import useModal from "@/lib/useModal";
+import Modal from "@/components/ui/modal";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 const selectedTask = {
     topic: "Тема 1",
@@ -28,9 +35,27 @@ const selectedTask = {
 
 export default function MyPage() {
     const nameTestLong = "hello hello hello hello";
-
+    const { isModalOpen, openModal, closeModal } = useModal()
+    const [report, setReport] = useState('')
     return (
         <main className="min-h-screen bg-bg dark:bg-bgDark  flex flex-col items-center">
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Изменение вуза</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Input value={report} onChange={(e) => setReport(e.target.value)} placeholder="Имя" type="text" />
+                    </CardContent>
+                    <CardFooter>
+                        <Button onClick={() => {
+                            //TODO: send REPORT
+
+                            closeModal();
+                        }}>Изменить</Button>
+                    </CardFooter>
+                </Card>
+            </Modal>
             <header
                 className="px-[30px] !bg-opacity-0 z-10 max-w-[1320px] w-full items-center justify-between text-sm flex pt-[20px] max-[730px]:flex-col max-[730px]:!bg-opacity-100  max-[730px]:pt-[5px] bg-white dark:bg-bgButtonDark ">
                 <Button className="text-[26px] font-semibold max-[600px]:w-full">
@@ -38,10 +63,10 @@ export default function MyPage() {
                 </Button>
                 <div className={"flex gap-[20px]"}>
                     <ThemeChanger
-                        className={" cursor-pointer px-[34px] py-[17px] bg-bgButton  text-black dark:text-white dark:bg-bgButtonDark rounded-[20px] flex  items-center justify-center !h-[54px]"}/>
+                        className={" cursor-pointer px-[34px] py-[17px] bg-bgButton  text-black dark:text-white dark:bg-bgButtonDark rounded-[20px] flex  items-center justify-center !h-[54px]"} />
                     <Link href={"/auth"}>
                         <Button className={"text-[22px] gap-[10px]"}>
-                            <Image className={"dark:invert"} src={"/profile.svg"} alt={""} width={17} height={17}/>
+                            <Image className={"dark:invert"} src={"/profile.svg"} alt={""} width={17} height={17} />
                             <span className={"truncate max-w-[200px]"}>
                                 {nameTestLong}
                             </span>
@@ -56,10 +81,10 @@ export default function MyPage() {
                         <Button className={"text-[22px] font-medium py-[8px]"}>
                             Контакты
                         </Button>
-                        <TasksList/>
+                        <TasksList />
                     </div>
 
-                    <Button className={"!bg-accentViolet !text-white text-[22px] font-medium text-center mt-auto"}>
+                    <Button onClick={() => isModalOpen ? closeModal() : openModal()} className={"!bg-accentViolet !text-white text-[22px] font-medium text-center mt-auto"}>
                         Отправить отчет
                     </Button>
                 </div>

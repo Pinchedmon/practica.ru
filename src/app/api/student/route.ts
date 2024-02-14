@@ -1,16 +1,8 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
 import { db } from "../../../../firebase";
 
-export async function GET(req: Request, route: { params: { id: string } }) {
-  try {
-    return NextResponse.json({ comments: {}}, { status: 200 });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ message: "Something went wrong!" }, { status: 500 });
-  }
-}
-export async function POST(req: Request, route: { params: { id: string } }) {
+export async function POST(req: Request,) {
   try {
     const body = await req.json();
     const { email, id, name}  = body;
@@ -32,19 +24,42 @@ export async function POST(req: Request, route: { params: { id: string } }) {
     return NextResponse.json({ message: "Something went wrong!" }, { status: 500 });
   }
 }
-export async function PUT(req: Request, route: { params: { id: string } }) {
+export async function PUT(req: Request, ) {
     try {
-      return NextResponse.json({ comments: {}}, { status: 200 });
+      const body = await req.json();
+      const {data}  = body;
+      const studentsRef = doc(db, "students", data.id as string );
+      await updateDoc(studentsRef, {
+      //TODO: добавить изменение данных
+      });
+      return NextResponse.json({data: 'updated'}, { status: 200 });
     } catch (err) {
       console.error(err);
       return NextResponse.json({ message: "Something went wrong!" }, { status: 500 });
     }
 }
-export async function DELETE(req: Request, route: { params: { id: string } }) {
+export async function DELETE(req: Request ) {
     try {
-      return NextResponse.json({ comments: {}}, { status: 200 });
+      const { searchParams } = new URL(req.url);
+        const id = searchParams.get('id');
+        const studentsRef = doc(db, "students", id as string );
+        await deleteDoc(studentsRef);
+      return NextResponse.json({ data: 'deleted'}, { status: 200 });
     } catch (err) {
       console.error(err);
       return NextResponse.json({ message: "Something went wrong!" }, { status: 500 });
     }
   }
+  export async function GET(req: Request ) {
+    try {
+        const { searchParams } = new URL(req.url);
+  const id = searchParams.get('id');
+  const studentsRef = doc(db, "students", id as string);
+  const docSnap = await getDoc(studentsRef);
+      return NextResponse.json({ data: docSnap.data()}, { status: 200 });
+    } catch (err) {
+      console.error(err);
+      return NextResponse.json({ message: "Something went wrong!" }, { status: 500 });
+    }
+  }
+

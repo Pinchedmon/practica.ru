@@ -32,7 +32,6 @@ export default function AuthPage() {
 
 
     return (
-
         <main className="flex min-h-screen items-center justify-center bg-accentViolet">
             <div className="max-w-[1000px] flex gap-[150px] items-center max-[1000px]:flex-col max-[1000px]:gap-[30px]">
                 <div className={"flex flex-col gap-[20px] items-center"}>
@@ -40,11 +39,11 @@ export default function AuthPage() {
                         Практика.ру
                     </div>
                     <p className={"text-white text-[48px] font-semibold max-[1000px]:text-[24px] "}>Задания здесь!</p>
-                </div>x
+                </div>
                 {session.status !== 'authenticated' && <SignInButton botUsername={`${process.env.BOT_USERNAME}`} />}
                 {
                     (session.status == 'authenticated' && !order) ?
-                        <AuthForm onCreate={() => setOrder(true)} /> : 'Вы отправили заявку, подождите пока её обработают'
+                        <AuthForm id={session.data.user.id} onCreate={() => setOrder(true)} /> : 'Вы отправили заявку, подождите пока её обработают'
                 }
             </div>
         </main>
