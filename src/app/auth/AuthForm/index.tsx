@@ -88,7 +88,7 @@ export function DatePickerWithRange({
 }
 
 
-const AuthForm = (props: { onCreate: () => void }) => {
+const AuthForm = (props: { id: string, onCreate: () => void }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>();
     const [date, setDate] = useState<DateRange | undefined>()
     const getDate = (date: DateRange) => {
@@ -96,10 +96,11 @@ const AuthForm = (props: { onCreate: () => void }) => {
     }
     const onSubmit = async (data: IFormInput) => {
         await axios.post('/api/order', {
+            id: props.id,
             fio: data.fio,
             phone: data.phone,
-            endDate: data.endDate,
-            startDate: data.startDate,
+            endDate: date?.from,
+            startDate: date?.to,
             file: data.file,
             university: data.university,
             spec: data.spec,
@@ -150,16 +151,15 @@ const AuthForm = (props: { onCreate: () => void }) => {
                         Направление
                     </label>
                     <input
-                        id="file"
-                        type="file"
-                        className="hidden"
+                        placeholder="yandex disk"
+                        id="text"
+                        type="text"
+                        className={"bg-white text-black border-0 rounded-[15px] px-[15px] py-[7px] placeholder:text-placeholderGray text-[16px]"}
                         {...register('file', {
                             required: 'Не заполнено',
                         })}
                     />
-                    <div
-                        className={"border-4 border-solid border-white text-[16px] font-bold px-[20px] py-[7px] rounded-[15px]"}>Выбрать
-                    </div>
+
                 </div>
                 <div className='flex flex-col '>
                     <label htmlFor={"university"} className={"pl-[20px] text-[16px] mb-[5px]"}>Наименование учебного учреждения</label>

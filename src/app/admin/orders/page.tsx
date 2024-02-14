@@ -11,47 +11,53 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal } from "lucide-react";
+import useSWR from "swr"
+import { fetcher } from "@/lib/fetcher"
 
 
 type Order = {
     id: string;
-    FIO: string;
-    Phone: number;
-    Begin: string;
-    End: string;
-    File: string;
-    Univ: string;
-    Spec: string;
+    fio: string;
+    phone: number;
+    startDate: string;
+    endDate: string;
+    file: string;
+    univ: string;
+    spec: string;
 };
 const columns: ColumnDef<Order>[] = [
 
     {
+        header: "id",
+        accessorKey: "id",
+    },
+    {
         header: "ФИО",
-        accessorKey: "FIO",
+        accessorKey: "fio",
     },
     {
         header: "Телефон",
-        accessorKey: "Phone",
+        accessorKey: "phone",
     },
     {
         header: "Начало",
-        accessorKey: "Begin",
+        accessorKey: "startDate",
     },
     {
         header: "Конец",
-        accessorKey: "End",
+        accessorKey: "endDate",
     },
     {
         header: "Направление",
-        accessorKey: "File",
+        accessorKey: "file",
     },
     {
         header: "ВУЗ",
-        accessorKey: "Univ",
+        accessorKey: "univ",
     },
     {
         header: "Специальность",
-        accessorKey: "Spec",
+        accessorKey: "spec",
     },
     {
         id: "actions",
@@ -78,24 +84,17 @@ const columns: ColumnDef<Order>[] = [
 ];
 
 function OrdersPage() {
-    const data = [
-        {
-            id: '1',
-            FIO: 'Фамилия Имя Отчество',
-            Phone: 8923434334343,
-            Begin: '02/02/24',
-            End: '02/02/25',
-            File: 'ya.ru',
-            Univ: 'Политех',
-            Spec: 'Информационная безопасност',
-        },
-    ]
+    const { data, error, isLoading } = useSWR('/api/orders', fetcher)
+    console.log(data);
+    if (error) return <div>ошибка загрузки</div>
+    if (isLoading) return <div>загрузка...</div>
+
     return (
         <div>
             <p className="font-mono text-xl mb-4">
                 Заявки
             </p>
-            <DataTable columns={columns} data={data} />
+            <DataTable columns={columns} data={data.data} />
 
         </div>
     )
