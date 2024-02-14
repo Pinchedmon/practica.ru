@@ -3,19 +3,20 @@ import { collection, doc, getDoc, getDocs, query, where} from "firebase/firestor
 import { db } from "../../../../firebase";
 
 export async function GET(req: NextRequest) {
-  const univId = req.nextUrl.searchParams.get("univId") || "";
-  const specId = req.nextUrl.searchParams.get("specId") || "";
-
-
   try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+    const studentsRef = doc(db, "students", id as string);
+    const docSnap = await getDoc(studentsRef);
+    const user = docSnap.data();
     const params = []
 
-    if (univId) {
-      params.push(where('univId', '==', univId))
+    if (user?.univId) {
+      params.push(where('univId', '==', user?.univId))
     }
 
-    if(specId) {
-      params.push(where('specId', '==', specId))
+    if(user?.specId) {
+      params.push(where('specId', '==', user?.specId))
     }
 
     const dataRef = query(
@@ -28,6 +29,7 @@ export async function GET(req: NextRequest) {
     docsSnap.forEach((doc) => {
       const data = doc.data()
       if (data.id){
+        
         res.push(
             doc.data()
         );

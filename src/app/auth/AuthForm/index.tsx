@@ -6,10 +6,13 @@ import { cn } from "@/lib/utils";
 import { addDays, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import {useSession} from "next-auth/react";
+import { useSession } from "next-auth/react";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
+import { Combobox } from "@/widgets/admin/AddTaskWindow/Combobox/Combobox";
 
 
 interface IFormInput {
@@ -96,18 +99,22 @@ export function DatePickerWithRange({
 
 const AuthForm = (props: { id: string, onCreate: () => void }) => {
     const session = useSession();
-
+    const { data: univs } = useSWR('/api/univs', fetcher)
+    const { data: specs } = useSWR('/api/specs', fetcher)
+    const [univId, setUnivId] = useState('');
+    const [specId, setSpecId] = useState('');
     const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>();
     const [date, setDate] = useState<DateRange | undefined>()
     const updateDate = (date: DateRange) => {
         setDate(date)
     }
-
-
     const onSubmit = async (data: IFormInput) => {
         console.log(data);
         console.log(date)
 
+        if (!univId || !specId) {
+            return window.alert('заполните вуз и специальность')
+        }
         await axios.post('/api/order', {
             // studentId: session.data?.user.id || "1",
             id: props.id,
@@ -116,11 +123,17 @@ const AuthForm = (props: { id: string, onCreate: () => void }) => {
             endDate: date?.from,
             startDate: date?.to,
             file: data.file,
-            university: data.university,
-            spec: data.spec,
+            university: univId,
+            spec: specId,
         }).then(res => res.status === 200 && props.onCreate())
     }
+    const dataUniv = univs?.data.map((el: any) => ({ value: el.id, label: el.name }));
+    const dataSpec = specs?.data.map((el: any) => ({ value: el.id, label: el.name }));
 
+
+    // const dataUniv = univs.map(el => ({value: el.id, label: el.name}));
+    // const dataSpec = specs.map(el => ({value: el.id, label: el.name}));
+    console.log(univs)
     return (
         <div className={"flex flex-col"}>
             <div className={"mb-[20px] px-[40px] py-[10px] text-[24px] font-bold bg-white rounded-[10px] text-black"}>Заполнение формы</div>
@@ -176,7 +189,8 @@ const AuthForm = (props: { id: string, onCreate: () => void }) => {
                 </div>
                 <div className='flex flex-col '>
                     <label htmlFor={"university"} className={"pl-[20px] text-[16px] mb-[5px]"}>Наименование учебного учреждения</label>
-                    <input
+                    {univs?.data && <Combobox data={dataUniv} label={'Вуз'} onSelect={setUnivId} />}
+                    {/* <input
                         placeholder="Политех"
                         id='university'
                         type="text"
@@ -186,12 +200,13 @@ const AuthForm = (props: { id: string, onCreate: () => void }) => {
                             minLength: { value: 6, message: 'Минимальная длина 6 символов' },
                             maxLength: { value: 40, message: 'Максимальная длина 40 символов' },
                         })}
-                    />
-                    {errors.university && <p className='my-1 text-red-800 text-sm'>{errors.university.message}</p>}
+                    /> */}
+                    {/* {errors.university && <p className='my-1 text-red-800 text-sm'>{errors.university.message}</p>} */}
                 </div>
                 <div className='flex flex-col '>
                     <label htmlFor={"spec"} className={"pl-[20px] text-[16px] mb-[5px]"}>Специальность</label>
-                    <input
+                    {specs?.data && <Combobox data={dataSpec} label={'Специальность'} onSelect={setSpecId} />}
+                    {/* <input
                         placeholder="Прогер"
                         id='spec'
                         type="text"
@@ -201,8 +216,8 @@ const AuthForm = (props: { id: string, onCreate: () => void }) => {
                             minLength: { value: 6, message: 'Минимальная длина 6 символов' },
                             maxLength: { value: 40, message: 'Максимальная длина 40 символов' },
                         })}
-                    />
-                    {errors.spec && <p className='my-1 text-red-800 text-sm'>{errors.spec.message}</p>}
+                    /> */}
+                    {/* {errors.spec && <p className='my-1 text-red-800 text-sm'>{errors.spec.message}</p>} */}
                 </div>
 
 

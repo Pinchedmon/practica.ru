@@ -1,5 +1,5 @@
 import {NextRequest, NextResponse} from "next/server";
-import {collection, getDocs, query, where} from "firebase/firestore";
+import {collection, doc, getDoc, getDocs, query, where} from "firebase/firestore";
 import {db} from "../../../../firebase";
 
 
@@ -40,14 +40,28 @@ export async function GET(req: NextRequest) {
 
     const docsSnap = await getDocs(dataRef);
     const res: any[] = [];
-    docsSnap.forEach((doc) => {
-      const data = doc.data()
-      if (data.id){
-        res.push(
-            doc.data()
-        );
+    for (const docum of docsSnap.docs) {
+      const data = docum.data();
+  
+      if (data.studentId) {
+        const studentsRef = doc(db, 'students', data.studentId);
+        const userSnap = await getDoc(studentsRef);
+        const student = userSnap.data();
+  
+        res.push({ ...data, studentName: student?.name });
       }
-    });
+    }
+    // docsSnap.forEach(async(docum) => {
+    //   const data = docum.data()
+    //   if (data.id){
+    //     const studentsRef = doc(db, "students", data.studentId as string);
+    //     const userSnap = await getDoc(studentsRef);
+    //     const studentId = userSnap.data()
+    //     res.push(
+    //         { ...docum.data()}
+    //     );
+    //   }
+    // });
 
     return NextResponse.json({ data: res}, { status: 200 });
 
