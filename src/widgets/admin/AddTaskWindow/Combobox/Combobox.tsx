@@ -40,7 +40,8 @@ export function Combobox(props: Props) {
     const [value, setValue] = useState(selected || "")
 
     useEffect(() => {
-        if (value)
+        // if (value)
+        console.log(value)
         onSelect(value);
     }, [value]);
 

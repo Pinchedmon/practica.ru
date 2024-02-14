@@ -1,11 +1,26 @@
-import { NextResponse } from "next/server";
+import {NextRequest, NextResponse} from "next/server";
 import { collection, doc, getDoc, getDocs, query, where} from "firebase/firestore";
 import { db } from "../../../../firebase";
 
-export async function GET(req: Request, route: { params: { id: string } }) {
+export async function GET(req: NextRequest) {
+  const univId = req.nextUrl.searchParams.get("univId") || "";
+  const specId = req.nextUrl.searchParams.get("specId") || "";
+
+
   try {
+    const params = []
+
+    if (univId) {
+      params.push(where('univId', '==', univId))
+    }
+
+    if(specId) {
+      params.push(where('specId', '==', specId))
+    }
+
     const dataRef = query(
         collection(db, 'tasks'),
+        ...params
     );
 
     const docsSnap = await getDocs(dataRef);

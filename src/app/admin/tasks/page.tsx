@@ -1,18 +1,26 @@
 'use client'
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { DataTable } from "@/lib/DataTable/DataTable"
+import {Button} from "@/components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuItem,
+    DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {DataTable} from "@/lib/DataTable/DataTable"
 import AddTaskWindow from "@/widgets/admin/AddTaskWindow";
-import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react";
+import {ColumnDef} from "@tanstack/react-table"
+import {MoreHorizontal} from "lucide-react";
 import useSWR, {useSWRConfig} from "swr";
 import useModal from "@/lib/useModal";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {fetcher} from "@/lib/fetcher";
 import axios from "axios";
 import EditTaskModal from "@/app/admin/tasks/components/EditTaskModal";
+import SearchTaskForm from "@/app/admin/tasks/components/SearchTaskForm";
 
 
 type Task = {
@@ -34,24 +42,34 @@ export type TaskFormatted = {
 };
 
 
-
 function TasksPage() {
 
-    const { mutate } = useSWRConfig();
+    const {mutate} = useSWRConfig();
 
     // мой кастомный хук для работы с модалкой
-    const { isModalOpen, openModal, closeModal } = useModal();
+    const {isModalOpen, openModal, closeModal} = useModal();
 
 
     // получаю вузы
-    const { data: univs, error, isLoading } = useSWR('/api/univs', fetcher)
+    const {data: univs, error, isLoading} = useSWR('/api/univs', fetcher)
 
-    const { data: specs } = useSWR('/api/specs', fetcher)
+    const {data: specs} = useSWR('/api/specs', fetcher)
 
-    const {data: tasks} = useSWR('/api/tasks', fetcher)
+    const {data: tasks, mutate: mutateTasks} = useSWR('/api/tasks', fetcher)
 
     // использую для получения айдишника чтобы можно было сделать edit fetch
     const [dataId, setDataId] = useState('');
+
+    const searchTasks = async ({univId, specId}: { univId?: string, specId?: string }) => {
+        try {
+            const url = `/api/tasks?univId=${univId || ''}&specId=${specId || ''}`;
+            mutateTasks(() => fetcher(url), {revalidate: false});
+        } catch (error) {
+            console.error(error);
+        }
+
+    };
+
 
     if (error) return <div>ошибка загрузки</div>
     if (isLoading) return <div>загрузка...</div>
@@ -62,13 +80,13 @@ function TasksPage() {
 
         console.log(data);
 
-            try {
-                await axios.post('/api/task', data);
-                await mutate('/api/tasks', fetcher('/api/tasks'));
+        try {
+            await axios.post('/api/task', data);
+            await mutate('/api/tasks', fetcher('/api/tasks'));
 
-            } catch (error) {
-                console.error(error);
-            }
+        } catch (error) {
+            console.error(error);
+        }
 
     }
 
@@ -87,19 +105,19 @@ function TasksPage() {
         },
         {
             id: "actions",
-            cell: ({ row }) => {
+            cell: ({row}) => {
                 const task = row.original
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="h-8 w-8 p-0">
                                 <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
+                                <MoreHorizontal className="h-4 w-4"/>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Действия</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
+                            <DropdownMenuSeparator/>
                             <DropdownMenuItem onClick={() => {
                                 setDataId(task.id);
                                 openModal();
@@ -150,6 +168,7 @@ function TasksPage() {
         }
     };
 
+
     return (
         <div>
             <p className="font-mono text-xl mb-4">
@@ -158,27 +177,11 @@ function TasksPage() {
             {dataId && <EditTaskModal prevData={formatTask(tasks?.data?.find((el: Task) => el.id === dataId))}
                                       univs={univs?.data || []} specs={specs?.data || []} isModalOpen={isModalOpen}
                                       closeModal={closeModal} onSubmit={editTask}/>}
-            <div className="flex flex-col md:flex-row gap-6 mb-4">
-                <div className="w-full md:w-1/2">
-                    <div className="w-full flex gap-2 items-end mb-2" >
-                        <div className="grid w-full items-center gap-1.5">
-                            <Label htmlFor="univ" className="mb-1">Поиск по вузу</Label>
-                            <Input id="univ" placeholder="Название вуза" type="text" />
-                        </div>
-                        <Button>Поиск</Button>
-                    </div>
-                    <div className="w-full flex gap-2 items-end" >
-                        <div className="grid w-full  items-center gap-1.5">
-                            <Label htmlFor="fio" className="mb-1">Поиск по Специальности</Label>
-                            <Input id="fio" placeholder="ФИО" type="text" />
-                        </div>
-                        <Button>Поиск</Button>
-                    </div>
-                </div>
-            </div>
-            <AddTaskWindow onAdd={onAddTask} specs={specs?.data || []} univs={univs?.data || []} />
-            <DataTable columns={columns} data={tasksFormatted || []} />
+            <SearchTaskForm onSearch={searchTasks} univs={univs?.data || []} specs={specs?.data || []}/>
+            <AddTaskWindow onAdd={onAddTask} specs={specs?.data || []} univs={univs?.data || []}/>
+            <DataTable columns={columns} data={tasksFormatted || []}/>
         </div>
     )
 }
+
 export default TasksPage
