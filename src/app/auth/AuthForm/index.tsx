@@ -24,8 +24,8 @@ interface IFormInput {
 
 
 export function DatePickerWithRange({
-    className,
-}: React.HTMLAttributes<HTMLDivElement>) {
+    className, getDate
+}: { className?: string, getDate: (date: DateRange) => void }) {
     const [date, setDate] = useState<DateRange | undefined>({
         from: new Date(),
         to: addDays(new Date(), 30),
@@ -75,7 +75,10 @@ export function DatePickerWithRange({
 
                         defaultMonth={date?.from}
                         selected={date}
-                        onSelect={setDate}
+                        onSelect={(e) => {
+                            setDate({ from: e?.from, to: e?.to })
+                            getDate({ from: e?.from, to: e?.to })
+                        }}
                         numberOfMonths={1}
                     />
                 </PopoverContent>
@@ -87,7 +90,10 @@ export function DatePickerWithRange({
 
 const AuthForm = (props: { onCreate: () => void }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>();
-
+    const [date, setDate] = useState<DateRange | undefined>()
+    const getDate = (date: DateRange) => {
+        setDate(date)
+    }
     const onSubmit = async (data: IFormInput) => {
         await axios.post('/api/order', {
             fio: data.fio,
@@ -137,7 +143,7 @@ const AuthForm = (props: { onCreate: () => void }) => {
                 </div>
                 <div className={"flex flex-col gap-[5px]"}>
                     <label htmlFor={"fio"} className={"pl-[20px] text-[16px]"}> Даты практики</label>
-                    <DatePickerWithRange />
+                    <DatePickerWithRange getDate={getDate} />
                 </div>
                 <div className={"flex justify-between items-center"}>
                     <label htmlFor="file" className={"pl-[20px]  text-[16px]"}>
