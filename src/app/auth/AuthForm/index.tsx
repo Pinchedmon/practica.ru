@@ -6,9 +6,10 @@ import { cn } from "@/lib/utils";
 import { addDays, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+import {useSession} from "next-auth/react";
 
 
 interface IFormInput {
@@ -24,12 +25,17 @@ interface IFormInput {
 
 
 export function DatePickerWithRange({
-    className, getDate
-}: { className?: string, getDate: (date: DateRange) => void }) {
+    className, updateDate
+}: { className?: string, updateDate: (date: DateRange) => void }) {
     const [date, setDate] = useState<DateRange | undefined>({
         from: new Date(),
         to: addDays(new Date(), 30),
     })
+
+    useEffect(() => {
+        updateDate(date as DateRange)
+    }, [date]);
+
 
     return (
         <div className={cn("grid gap-2 w-full", className)}>
@@ -77,7 +83,7 @@ export function DatePickerWithRange({
                         selected={date}
                         onSelect={(e) => {
                             setDate({ from: e?.from, to: e?.to })
-                            getDate({ from: e?.from, to: e?.to })
+                            // getDate({ from: e?.from, to: e?.to })
                         }}
                         numberOfMonths={1}
                     />
@@ -89,13 +95,21 @@ export function DatePickerWithRange({
 
 
 const AuthForm = (props: { id: string, onCreate: () => void }) => {
+    const session = useSession();
+
     const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>();
     const [date, setDate] = useState<DateRange | undefined>()
-    const getDate = (date: DateRange) => {
+    const updateDate = (date: DateRange) => {
         setDate(date)
     }
+
+
     const onSubmit = async (data: IFormInput) => {
+        console.log(data);
+        console.log(date)
+
         await axios.post('/api/order', {
+            // studentId: session.data?.user.id || "1",
             id: props.id,
             fio: data.fio,
             phone: data.phone,
@@ -104,7 +118,6 @@ const AuthForm = (props: { id: string, onCreate: () => void }) => {
             file: data.file,
             university: data.university,
             spec: data.spec,
-
         }).then(res => res.status === 200 && props.onCreate())
     }
 
@@ -144,7 +157,7 @@ const AuthForm = (props: { id: string, onCreate: () => void }) => {
                 </div>
                 <div className={"flex flex-col gap-[5px]"}>
                     <label htmlFor={"fio"} className={"pl-[20px] text-[16px]"}> Даты практики</label>
-                    <DatePickerWithRange getDate={getDate} />
+                    <DatePickerWithRange updateDate={updateDate} />
                 </div>
                 <div className={"flex justify-between items-center"}>
                     <label htmlFor="file" className={"pl-[20px]  text-[16px]"}>

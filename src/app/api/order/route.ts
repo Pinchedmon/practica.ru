@@ -29,8 +29,9 @@ export async function POST(req: Request) {
         file,
         university,
         spec,
+          // studentId
       }  = body;
-        const orderRef = doc(db, "orders", fio);
+        const orderRef = doc(db, "orders", id);
                   await setDoc(orderRef, {
                     id,
                     fio,
@@ -41,7 +42,7 @@ export async function POST(req: Request) {
                     university,
                     spec,
                     });
-                  
+
       return NextResponse.json({ data:'created'}, { status: 200 });
     } catch (err) {
       console.error(err);
@@ -72,7 +73,7 @@ export async function POST(req: Request) {
     }
   }
   export async function GET(req: Request) {
-    
+
     try {
       const { searchParams } = new URL(req.url);
       const id = searchParams.get('id');

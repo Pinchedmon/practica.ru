@@ -5,19 +5,19 @@ import { db } from "../../../../firebase";
 export async function POST(req: Request,) {
   try {
     const body = await req.json();
-    const { email, id, name}  = body;
-      const studentsRef = doc(db, "students", id);
-              const docSnap = await getDoc(studentsRef);
-              if (docSnap.exists()) {
-                return NextResponse.json({data: docSnap.data() }, { status: 200 });
-                } else {
-                await setDoc(studentsRef, {
-                  id: id,
-                  name: name,
-                  email: email,
-                  accepted: false,
-                  });
-                }
+    const {  id, name}  = body;
+    const studentsRef = doc(db, "students", id);
+    const docSnap = await getDoc(studentsRef);
+    if (docSnap.exists()) {
+      return NextResponse.json({data: docSnap.data()}, {status: 200});
+    } else {
+      await setDoc(studentsRef, {
+        id: id,
+        name: name,
+        email: '',
+        accepted: false,
+        });
+      }
     return NextResponse.json({ data: 'false'}, { status: 200 });
   } catch (err) {
     console.error(err);

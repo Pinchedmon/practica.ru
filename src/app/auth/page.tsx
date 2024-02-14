@@ -23,6 +23,7 @@ export default function AuthPage() {
             }
         }
         )
+        console.log(session.data?.user.id);
         await axios.get(`/api/order?id=${session.data?.user.id}`)
             .then((res: any) => res.data.data && setOrder(true))
     }
