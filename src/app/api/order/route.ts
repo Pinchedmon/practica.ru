@@ -62,6 +62,7 @@ export async function POST(req: Request) {
         file: data.file,
         university: data.university,
         spec: data. spec,
+        accepted: true
       });
       return NextResponse.json({ data: 'updated'}, { status: 200 });
     } catch (err) {
