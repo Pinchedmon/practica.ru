@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     try {
       const body = await req.json();
       const { data }  = body;
-      const orderRef = doc(db, "orders", data.fio as string );
+      const orderRef = doc(db, "orders", data.id as string );
       await deleteDoc(orderRef);
       const studentRef = doc(db, "students", data.id );
       await updateDoc(studentRef, {

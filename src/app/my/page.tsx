@@ -10,6 +10,9 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import useSWR from "swr";
+import { fetcher } from "@/lib/fetcher";
+import { signOut, useSession } from "next-auth/react";
 
 const selectedTask = {
     topic: "Тема 1",
@@ -36,6 +39,8 @@ const selectedTask = {
 export default function MyPage() {
     const nameTestLong = "hello hello hello hello";
     const { isModalOpen, openModal, closeModal } = useModal()
+    const session = useSession()
+    // const { data, isLoading, error } = useSWR(`/api/student?id=${session.data?.user.id}`, fetcher)
     const [report, setReport] = useState('')
     return (
         <main className="min-h-screen bg-bg dark:bg-bgDark  flex flex-col items-center">
@@ -64,14 +69,14 @@ export default function MyPage() {
                 <div className={"flex gap-[20px]"}>
                     <ThemeChanger
                         className={" cursor-pointer px-[34px] py-[17px] bg-bgButton  text-black dark:text-white dark:bg-bgButtonDark rounded-[20px] flex  items-center justify-center !h-[54px]"} />
-                    <Link href={"/auth"}>
-                        <Button className={"text-[22px] gap-[10px]"}>
-                            <Image className={"dark:invert"} src={"/profile.svg"} alt={""} width={17} height={17} />
-                            <span className={"truncate max-w-[200px]"}>
-                                {nameTestLong}
-                            </span>
-                        </Button>
-                    </Link>
+                    <Button className={"cursor-default text-[22px] gap-[10px]"}>
+                        {/* <Image className={"dark:invert"} src={!data.data.image ? "/profile.svg" : data.data.image} alt={""} width={17} height={17} /> */}
+                        <span className={"truncate max-w-[200px]"}>
+                            {/* {data.data.name} */}
+                        </span>
+                    </Button>
+                    <Button onClick={() => signOut()}>Выйти</Button>
+
                 </div>
             </header>
 

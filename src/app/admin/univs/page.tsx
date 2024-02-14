@@ -37,7 +37,6 @@ function UnivsPage() {
 
     // получаю вузы 
     const { data, error, isLoading } = useSWR('/api/univs', fetcher)
-
     // использую для получения айдишника чтобы можно было сделать edit fetch
     const [dataId, setDataId] = useState('');
 
@@ -152,8 +151,8 @@ function UnivsPage() {
             </div>
 
             {/* Таблица */}
-            {data.univs &&
-                <DataTable columns={columns} data={data.univs} />}
+            {data.data &&
+                <DataTable columns={columns} data={data.data} />}
         </div>
     )
 }
