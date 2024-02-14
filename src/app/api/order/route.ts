@@ -5,10 +5,11 @@ import { db } from "../../../../firebase";
 export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get('id');
-    const orderRef = doc(db, "orders", id as string );
+    const fio = searchParams.get('fio');
+
+    const orderRef = doc(db, "orders", fio as string );
     await deleteDoc(orderRef);
-    const studentRef = doc(db, "students", id as string );
+    const studentRef = doc(db, "students", fio as string );
     await deleteDoc(studentRef);
     return NextResponse.json({ data: 'deleted'}, { status: 200 });
   } catch (err) {
@@ -51,7 +52,7 @@ export async function POST(req: Request) {
     try {
       const body = await req.json();
       const { data }  = body;
-      const orderRef = doc(db, "orders", data.id as string );
+      const orderRef = doc(db, "orders", data.fio as string );
       await deleteDoc(orderRef);
       const studentRef = doc(db, "students", data.id );
       await updateDoc(studentRef, {
